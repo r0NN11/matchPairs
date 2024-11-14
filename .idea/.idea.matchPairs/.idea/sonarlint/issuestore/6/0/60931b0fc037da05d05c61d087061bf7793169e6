@@ -1,0 +1,71 @@
+
+fcsharpsquid:S3247"HReplace this type-check-and-cast sequence with an 'as' and a null check.(›€Áæ
+fcsharpsquid:S3247„"HReplace this type-check-and-cast sequence with an 'as' and a null check.(ëÔŒÉ
+pcsharpsquid:S3776‘"RRefactor this method to reduce its Cognitive Complexity from 34 to the 15 allowed.(¢ĞñÂ
+ucsharpsquid:S3776¿"RRefactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.(±ê†“üÿÿÿÿ
+pcsharpsquid:S3776û	"RRefactor this method to reduce its Cognitive Complexity from 30 to the 15 allowed.(£°‘é
+pcsharpsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 29 to the 15 allowed.(Ïª·
+?csharpsquid:S2971®""Use 'Count' property here instead.(ÛèÊz
+Lcsharpsquid:S2933+"*Make '_inheritedDefaultParent' 'readonly'.(ÄºŸ„ÿÿÿÿÿ
+<csharpsquid:S29334" Make '_isValidating' 'readonly'.(ìâB
+Xcsharpsquid:S4136Î"5All 'ResolveAll' method overloads should be adjacent.(û€ô²ÿÿÿÿÿ
+Pcsharpsquid:S4136¶"2All 'Resolve' method overloads should be adjacent.(í¸Àä
+Tcsharpsquid:S4136Å"1All 'Unbind' method overloads should be adjacent.(ııÆşÿÿÿÿ
+Pcsharpsquid:S4136Ï"3All 'UnbindId' method overloads should be adjacent.(•²Ì]
+Xcsharpsquid:S4136—"5All 'HasBinding' method overloads should be adjacent.(Õ’Äıùÿÿÿÿ
+Ncsharpsquid:S4136ÿ"1All 'Rebind' method overloads should be adjacent.(íÕƒ3
+Vcsharpsquid:S4136„"3All 'RebindId' method overloads should be adjacent.(ĞÒùàøÿÿÿÿ
+Rcsharpsquid:S4136—"/All 'Bind' method overloads should be adjacent.(ëÂö—ıÿÿÿÿ
+acsharpsquid:S4136Î">All 'BindFactoryInternal' method overloads should be adjacent.(º‰Î¼üÿÿÿÿ
+Zcsharpsquid:S4136à"7All 'BindIFactory' method overloads should be adjacent.(ã„§æşÿÿÿÿ
+Ycsharpsquid:S4136å"6All 'BindFactory' method overloads should be adjacent.(‹µµåüÿÿÿÿ
+hcsharpsquid:S4136ë"EAll 'BindFactoryCustomInterface' method overloads should be adjacent.(ÙÅáÒüÿÿÿÿ
+jcsharpsquid:S4136Ÿ"GAll 'BindDisposableExecutionOrder' method overloads should be adjacent.(ÕÃØ¼ùÿÿÿÿ
+icsharpsquid:S4136¥"KAll 'BindLateDisposableExecutionOrder' method overloads should be adjacent.(Å£ìÆ
+Ycsharpsquid:S1199"6Extract this nested code block into a separate method.(ÒÌâ–øÿÿÿÿ
+Ycsharpsquid:S1199â"6Extract this nested code block into a separate method.(ÒÌâ–øÿÿÿÿ
+Ycsharpsquid:S1199Ä"6Extract this nested code block into a separate method.(ÒÌâ–øÿÿÿÿ
+Ycsharpsquid:S1199™"6Extract this nested code block into a separate method.(ÒÌâ–øÿÿÿÿ
+Ycsharpsquid:S1199Â"6Extract this nested code block into a separate method.(ÒÌâ–øÿÿÿÿ
+Ycsharpsquid:S1199ƒ"6Extract this nested code block into a separate method.(ÒÌâ–øÿÿÿÿ
+Ycsharpsquid:S1199Ê"6Extract this nested code block into a separate method.(ÒÌâ–øÿÿÿÿ
+Ycsharpsquid:S1199Ò"6Extract this nested code block into a separate method.(ÒÌâ–øÿÿÿÿ
+Ycsharpsquid:S1199È"6Extract this nested code block into a separate method.(ÒÌâ–øÿÿÿÿ
+gcsharpsquid:S2292¸"DMake this an auto-implemented property and remove its backing field.(™²Ñ‚üÿÿÿÿ
+Icsharpsquid:S1168Â"+Return an empty collection instead of null.(¥¹ï
+Rcsharpsquid:S2259Õ"4'injectable' is null on at least one execution path.(å‹×–
+œcsharpsquid:S2436«"yReduce the number of generic parameters in the 'DiContainer.BindFactoryInternal' method to no more than the 3 authorized.(ı—åÅøÿÿÿÿ
+Ÿcsharpsquid:S2436Ë"€Reduce the number of generic parameters in the 'DiContainer.BindFactoryCustomInterface' method to no more than the 3 authorized.(Éòô°
+—csharpsquid:S2436Ò"yReduce the number of generic parameters in the 'DiContainer.BindFactoryInternal' method to no more than the 3 authorized.(·èü’
+”csharpsquid:S2436ë"qReduce the number of generic parameters in the 'DiContainer.BindFactory' method to no more than the 3 authorized.(Á¹õıÿÿÿÿ
+Ÿcsharpsquid:S2436ò"€Reduce the number of generic parameters in the 'DiContainer.BindFactoryCustomInterface' method to no more than the 3 authorized.(Ü Îƒ
+œcsharpsquid:S2436ù"yReduce the number of generic parameters in the 'DiContainer.BindFactoryInternal' method to no more than the 3 authorized.(ÓÚ’Ïøÿÿÿÿ
+•csharpsquid:S2436Œ"rReduce the number of generic parameters in the 'DiContainer.BindIFactory' method to no more than the 3 authorized.(ç€¡¥ûÿÿÿÿ
+csharpsquid:S2436’"qReduce the number of generic parameters in the 'DiContainer.BindFactory' method to no more than the 3 authorized.(àØ°
+Ÿcsharpsquid:S2436™"€Reduce the number of generic parameters in the 'DiContainer.BindFactoryCustomInterface' method to no more than the 3 authorized.(¹Ó½š
+—csharpsquid:S2436 "yReduce the number of generic parameters in the 'DiContainer.BindFactoryInternal' method to no more than the 3 authorized.(“‰•„
+•csharpsquid:S2436³"rReduce the number of generic parameters in the 'DiContainer.BindIFactory' method to no more than the 3 authorized.(¥Øèœüÿÿÿÿ
+csharpsquid:S2436¹"qReduce the number of generic parameters in the 'DiContainer.BindFactory' method to no more than the 3 authorized.(ö¢‡X
+Ÿcsharpsquid:S2436À"€Reduce the number of generic parameters in the 'DiContainer.BindFactoryCustomInterface' method to no more than the 3 authorized.(¿”¦ì
+œcsharpsquid:S2436Ç"yReduce the number of generic parameters in the 'DiContainer.BindFactoryInternal' method to no more than the 3 authorized.(é½œŸüÿÿÿÿ
+•csharpsquid:S2436Ú"rReduce the number of generic parameters in the 'DiContainer.BindIFactory' method to no more than the 3 authorized.(ÎŠòşÿÿÿÿ
+”csharpsquid:S2436à"qReduce the number of generic parameters in the 'DiContainer.BindFactory' method to no more than the 3 authorized.(—°‚…ûÿÿÿÿ
+¤csharpsquid:S2436ç"€Reduce the number of generic parameters in the 'DiContainer.BindFactoryCustomInterface' method to no more than the 3 authorized.(ûê§ûşÿÿÿÿ
+œcsharpsquid:S2436î"yReduce the number of generic parameters in the 'DiContainer.BindFactoryInternal' method to no more than the 3 authorized.(–ªä³ÿÿÿÿÿ
+csharpsquid:S2436"rReduce the number of generic parameters in the 'DiContainer.BindIFactory' method to no more than the 3 authorized.(Á±áï
+”csharpsquid:S2436‡"qReduce the number of generic parameters in the 'DiContainer.BindFactory' method to no more than the 3 authorized.(œÛàûıÿÿÿÿ
+¤csharpsquid:S2436"€Reduce the number of generic parameters in the 'DiContainer.BindFactoryCustomInterface' method to no more than the 3 authorized.(ÈûàÙùÿÿÿÿ
+œcsharpsquid:S2436•"yReduce the number of generic parameters in the 'DiContainer.BindFactoryInternal' method to no more than the 3 authorized.(—¨ÇÔøÿÿÿÿ
+•csharpsquid:S2436¨"rReduce the number of generic parameters in the 'DiContainer.BindIFactory' method to no more than the 3 authorized.(Éû²«şÿÿÿÿ
+”csharpsquid:S2436®"qReduce the number of generic parameters in the 'DiContainer.BindFactory' method to no more than the 3 authorized.(‘­“şÿÿÿÿ
+Ÿcsharpsquid:S2436µ"€Reduce the number of generic parameters in the 'DiContainer.BindFactoryCustomInterface' method to no more than the 3 authorized.(ñ Æ 
+scsharpsquid:S6608Z"QIndexing at 0 should be used instead of the "Enumerable" extension method "First"(•¿¦ßıÿÿÿÿ
+ncsharpsquid:S6608¸"QIndexing at 0 should be used instead of the "Enumerable" extension method "First"(ÊĞÆ\
+wcsharpsquid:S6603Ë"YThe collection-specific "TrueForAll" method should be used instead of the "All" extension(…ğÂê
+wcsharpsquid:S6603Û"YThe collection-specific "TrueForAll" method should be used instead of the "All" extension(±êÃš
+<csharpsquid:S125“"Remove this commented out code.(Ù­‚“
+Acsharpsquid:S125Æ
+"Remove this commented out code.(ÁŸƒôûÿÿÿÿ
+<csharpsquid:S125ï"Remove this commented out code.(Ú°à¬
+<csharpsquid:S125«"Remove this commented out code.(œğòâ
+Wcsharpsquid:S1135¦	"4Complete the task associated to this 'TODO' comment.(˜ˆø‘ùÿÿÿÿ

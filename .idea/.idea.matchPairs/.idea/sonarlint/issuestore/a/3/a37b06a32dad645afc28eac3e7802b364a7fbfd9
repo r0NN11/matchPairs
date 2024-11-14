@@ -1,0 +1,17 @@
+
+Vcsharpsquid:S2971±"3Drop 'Where' and move the condition into the 'Any'.(å›Úïúÿÿÿÿ
+fcsharpsquid:S1104"DMake this field 'private' and encapsulate it in a 'public' property.(Œ—ˆçşÿÿÿÿ
+fcsharpsquid:S1104"DMake this field 'private' and encapsulate it in a 'public' property.(§ˆúÕùÿÿÿÿ
+acsharpsquid:S1104"DMake this field 'private' and encapsulate it in a 'public' property.(¬¬Ã
+acsharpsquid:S1104"DMake this field 'private' and encapsulate it in a 'public' property.(şü¯Æ
+fcsharpsquid:S1104"DMake this field 'private' and encapsulate it in a 'public' property.(Ç”ËØúÿÿÿÿ
+acsharpsquid:S1104"DMake this field 'private' and encapsulate it in a 'public' property.(±íÏ
+`csharpsquid:S1104"DMake this field 'private' and encapsulate it in a 'public' property.(±Ö›
+Xcsharpsquid:S1199p"6Extract this nested code block into a separate method.(ÒÌâ–øÿÿÿÿ
+scsharpsquid:S927é"VRename parameter 'monoBehaviours' to 'components' to match the base class declaration.(ëÍƒ¿
+ycsharpsquid:S2223"WChange the visibility of 'ExtraBindingsInstallMethod' or make it 'const' or 'readonly'.(Ç”ËØúÿÿÿÿ
+xcsharpsquid:S2223"[Change the visibility of 'ExtraBindingsLateInstallMethod' or make it 'const' or 'readonly'.(±íÏ
+icsharpsquid:S2223"MChange the visibility of 'ParentContainers' or make it 'const' or 'readonly'.(±Ö›
+xcsharpsquid:S2696¢"UMake the enclosing instance method 'static' or remove this set on the 'static' field.(íÙ‰ôøÿÿÿÿ
+xcsharpsquid:S2696Ğ"UMake the enclosing instance method 'static' or remove this set on the 'static' field.(Ùû«ûşÿÿÿÿ
+scsharpsquid:S2696å"UMake the enclosing instance method 'static' or remove this set on the 'static' field.(‘Éï
