@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using Model;
+using Model.Level;
 using UnityEngine;
 using View.Card;
-using View.Level;
 using Zenject;
 
 namespace Controller
 {
-	public class CardViewSpawner : MonoBehaviour
+	public class CardViewHolder : MonoBehaviour
 	{
-		private List<CardViewInject> _cardViewInjects = new List<CardViewInject>();
+		private readonly List<CardViewInject> _cardViewInjects = new List<CardViewInject>();
 		private Vector2 _cardSize;
 		private GameSettings _gameSettings;
 		[Inject] private CardViewInject.FactoryCardInject _factoryCardInject;
@@ -26,8 +26,10 @@ namespace Controller
 		{
 			for (int i = 0; i < _gameSettings.GetMaximumCardsCount; i++)
 			{
-				_cardViewInjects.Add(_factoryCardInject.Create());
-				_cardViewInjects[i].transform.SetParent(transform);
+				CardViewInject cardView = _factoryCardInject.Create();
+				cardView.gameObject.SetActive(false);
+				_cardViewInjects.Add(cardView);
+				cardView.transform.SetParent(transform);
 			}
 
 			_cardSize = ((RectTransform) _cardViewInjects[0].transform).sizeDelta;
@@ -63,8 +65,9 @@ namespace Controller
 					AbstractCardView cardView = cardViews[cardViewIndex] = _cardViewInjects[cardViewIndex];
 					cardView.Setup(cardModels[index], sprites[index]);
 					cardView.gameObject.SetActive(true);
-					cardView.transform.localPosition = (Vector3) start + new Vector3(row, -col, 0) * step;
-					cardView.transform.localScale=Vector3.one;
+					Transform cardViewTransform = cardView.transform;
+					cardViewTransform.localPosition = (Vector3) start + new Vector3(row, -col, 0) * step;
+					cardViewTransform.localScale = Vector3.one;
 					cardViewIndex++;
 					index++;
 				}

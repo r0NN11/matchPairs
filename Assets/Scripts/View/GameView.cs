@@ -1,5 +1,6 @@
 using System;
-using Controller;
+using DG.Tweening;
+using Model;
 using Model.Scores;
 using TMPro;
 using UnityEngine;
@@ -13,38 +14,52 @@ namespace View
 		public event Action OnNextButtonClick;
 		public event Action OnExitButtonClick;
 		public event Action OnResetButtonClick;
-		[SerializeField] private Button _next;
+		[SerializeField] private Button _nextButton;
 		[SerializeField] private Button _closeButton;
 		[SerializeField] private Button _resetButton;
 		[SerializeField] private TMP_Text _score;
 		[SerializeField] private TMP_Text _turnsCount;
+		private IScoresManager _scoresManager;
+		private float _animationTime;
+		private Tween _moveTween;
 
 		[Inject]
-		public void Constructor(IScoresManager scoresManager)
+		public void Constructor(GameSettings gameSettings, IScoresManager scoresManager)
 		{
-			scoresManager.OnScoresChange += UpdateScoreText;
-			scoresManager.OnTurnsCountChanges += UpdateTurnsCountText;
+			_scoresManager = scoresManager;
+			_scoresManager.OnScoresChange += UpdateScoreText;
+			_scoresManager.OnTurnsCountChanges += UpdateTurnsCountText;
+			_animationTime = gameSettings.GetButtonsAnimationTime;
 		}
+
 		private void Awake()
 		{
-			_next.onClick.AddListener(OnNextButton);
+			_nextButton.onClick.AddListener(OnNextButton);
 			_closeButton.onClick.AddListener(OnExitButton);
 			_resetButton.onClick.AddListener(OnResetButton);
 		}
 
 		public void ShowNextButton()
 		{
-			_next.gameObject.SetActive(true);
+			MakeButtonAnimation(_nextButton.transform);
 		}
+
 		public void ShowResetButton()
 		{
-			_resetButton.gameObject.SetActive(true);
+			MakeButtonAnimation(_resetButton.transform);
+		}
+
+		private void MakeButtonAnimation(Transform buttonTransform)
+		{
+			buttonTransform.gameObject.SetActive(true);
+			buttonTransform.localPosition = new Vector2(buttonTransform.localPosition.x, Screen.width);
+			_moveTween = buttonTransform.DOLocalMoveY(0, _animationTime);
 		}
 
 		private void OnNextButton()
 		{
 			OnNextButtonClick?.Invoke();
-			_next.gameObject.SetActive(false);
+			_nextButton.gameObject.SetActive(false);
 		}
 
 		private void OnExitButton()
@@ -60,10 +75,17 @@ namespace View
 
 		private void OnDestroy()
 		{
-			_next.onClick.RemoveListener(OnNextButton);
+			_moveTween.Kill();
+			_scoresManager.OnScoresChange -= UpdateScoreText;
+			_scoresManager.OnTurnsCountChanges -= UpdateTurnsCountText;
+			OnNextButtonClick = null;
+			OnExitButtonClick = null;
+			OnResetButtonClick = null;
+			_nextButton.onClick.RemoveListener(OnNextButton);
 			_closeButton.onClick.RemoveListener(OnExitButton);
 			_resetButton.onClick.RemoveListener(OnResetButton);
 		}
+
 		private void UpdateScoreText(int score)
 		{
 			_score.text = "Score" + score;

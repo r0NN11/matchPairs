@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Model;
+using Model.Level;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
 using View.Card;
-using View.Level;
 
 namespace Editor
 {

@@ -7,7 +7,6 @@ namespace View.Menu
 	public class MainMenu : MonoBehaviour
 	{
 		[SerializeField] private Button _playButton;
-		private const string GAME_SCENE_NAME = "GameScene";
 
 		private void Awake()
 		{
@@ -16,7 +15,7 @@ namespace View.Menu
 
 		private void LoadGameScene()
 		{
-			SceneManager.LoadScene(GAME_SCENE_NAME);
+			SceneManager.LoadScene(1);
 		}
 		
 		private void OnDestroy()

@@ -1,16 +1,10 @@
 using Newtonsoft.Json;
 using UnityEngine;
-using Zenject;
 
 namespace Save
 {
     public class SaveSystem : ISaveSystem
     {
-        [Inject]
-        public SaveSystem()
-        {
-        }
-
         public void SaveValue<T>(string key, T value)
         {
             string json = JsonConvert.SerializeObject(value);

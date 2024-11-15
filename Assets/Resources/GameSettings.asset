@@ -96,5 +96,7 @@ MonoBehaviour:
   _matchPoints: 1
   _comboMultiplier: 1
   _comboIncreaseStep: 3
-  _cardsFlipTime: 0.5
   _maximumGridSize: {x: 6, y: 6}
+  _cardsStartFlipTime: 0.5
+  _cardsFlipTime: 0.3
+  _buttonsAnimationTime: 0.5

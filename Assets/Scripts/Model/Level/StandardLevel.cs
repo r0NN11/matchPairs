@@ -1,7 +1,7 @@
 using Save;
 using View.Card;
 
-namespace View.Level
+namespace Model.Level
 {
 	public class StandardLevel : AbstractLevel
 	{

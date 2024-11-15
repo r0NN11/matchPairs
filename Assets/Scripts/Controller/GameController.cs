@@ -1,13 +1,12 @@
-using System;
 using System.Collections.Generic;
 using Controller.Audio;
 using Model;
+using Model.Level;
 using Model.Scores;
 using Save;
 using UnityEngine.SceneManagement;
 using View;
 using View.Card;
-using View.Level;
 using Zenject;
 
 namespace Controller
@@ -16,11 +15,11 @@ namespace Controller
 	{
 		private readonly GameSettings _gameSettings;
 		private readonly IScoresManager _scoresManager;
-		private readonly CardViewSpawner _cardViewSpawner;
+		private readonly CardViewHolder _cardViewHolder;
 		private readonly IAudioManager _audioManager;
 		private readonly ISaveSystem _saveSystem;
 		private readonly GameView _gameView;
-		private List<LevelConfig> _levelsConfigs;
+		private readonly List<LevelConfig> _levelsConfigs;
 		private int _currentLevelId;
 		private AbstractLevel _currentLevel;
 		private AbstractCardView _firstCardView;
@@ -28,13 +27,13 @@ namespace Controller
 		private const string CURRENT_LEVEL_SAVE_KEY = "current_level";
 
 		[Inject]
-		public GameController(GameSettings gameSettings, IScoresManager scoresManager, CardViewSpawner cardViewSpawner,
+		public GameController(GameSettings gameSettings, IScoresManager scoresManager, CardViewHolder cardViewHolder,
 			IAudioManager audioManager, ISaveSystem saveSystem, GameView gameView)
 		{
 			_gameSettings = gameSettings;
 			_levelsConfigs = _gameSettings.GetLevelsConfigs;
 			_scoresManager = scoresManager;
-			_cardViewSpawner = cardViewSpawner;
+			_cardViewHolder = cardViewHolder;
 			_audioManager = audioManager;
 			_saveSystem = saveSystem;
 			_gameView = gameView;
@@ -44,8 +43,8 @@ namespace Controller
 
 		private void Initialize()
 		{
-			_cardViewSpawner.CreateCards();
-			foreach (CardViewInject card in _cardViewSpawner.GetCardViewsInjects)
+			_cardViewHolder.CreateCards();
+			foreach (CardViewInject card in _cardViewHolder.GetCardViewsInjects)
 			{
 				card.OnClick += CheckClick;
 			}
@@ -62,50 +61,19 @@ namespace Controller
 				return;
 			}
 
-			LoadGame();
+			LoadLevel();
 		}
 
-		public void LoadGame()
+		public void LoadLevel()
 		{
-			AbstractCardView[] levelCards = _cardViewSpawner.GetCardsForLevelConfig(_levelsConfigs[_currentLevelId]);
+			AbstractCardView[] levelCards = _cardViewHolder.GetCardsForLevelConfig(_levelsConfigs[_currentLevelId]);
 			_currentLevel = new StandardLevel(_currentLevelId, _saveSystem, levelCards);
 			_currentLevel.LoadState();
 			foreach (AbstractCardView card in levelCards)
 			{
-				card.Flip(true, true, _gameSettings.GetCardsFlipTime);
+				card.Flip(true, true, _gameSettings.GetCardsStartFlipTime);
 			}
 		}
-
-		private void SubscribeGameViewButtons()
-		{
-			_gameView.OnNextButtonClick += LoadGame;
-			_gameView.OnExitButtonClick += GoToMainMenu;
-			_gameView.OnResetButtonClick += ResetGame;
-		}
-
-
-		public void CheckClick(AbstractCardView cardView)
-		{
-			if (_firstCardView == null)
-			{
-				_firstCardView = cardView;
-				cardView.Flip(true);
-				return;
-			}
-
-			if (_secondCardView != null || _firstCardView == cardView || _secondCardView == cardView)
-			{
-				return;
-			}
-
-			_secondCardView = cardView;
-			_secondCardView.Flip(true, false, _gameSettings.GetCardsFlipTime, (() =>
-			{
-				_scoresManager.UpdateTurn(1);
-				CheckForMatch();
-			}));
-		}
-
 		public void EndGame()
 		{
 			GoToMainMenu();
@@ -116,9 +84,47 @@ namespace Controller
 			_currentLevelId = 0;
 			_saveSystem.DeleteSave();
 			_scoresManager.Load();
-			LoadGame();
+			_scoresManager.ResetCombo();
+			LoadLevel();
+		}
+		public void CheckClick(AbstractCardView cardView)
+		{
+			if (_firstCardView == null)
+			{
+				_firstCardView = cardView;
+				cardView.Flip(true);
+				_audioManager.PlayFlipSound();
+				return;
+			}
+
+			if (_secondCardView != null || _firstCardView == cardView || _secondCardView == cardView)
+			{
+				return;
+			}
+
+			_secondCardView = cardView;
+			_audioManager.PlayFlipSound();
+			_secondCardView.Flip(true, false, _gameSettings.GetCardsSFlipTime, (() =>
+			{
+				_scoresManager.UpdateTurn(1);
+				CheckForMatch();
+			}));
 		}
 
+		private void SubscribeGameViewButtons()
+		{
+			_gameView.OnNextButtonClick += LoadNextLevel;
+			_gameView.OnExitButtonClick += GoToMainMenu;
+			_gameView.OnResetButtonClick += ResetGame;
+		}
+
+		private void LoadNextLevel()
+		{
+			_scoresManager.ResetCombo();
+			_scoresManager.UpdateTurn(0);
+			LoadLevel();
+		}
+		
 		private void GoToMainMenu()
 		{
 			SceneManager.LoadScene(0);
@@ -133,11 +139,14 @@ namespace Controller
 		{
 			if (_firstCardView.Id != _secondCardView.Id)
 			{
+				_audioManager.PlayMismatchSound();
 				FlipCards(false);
 				_firstCardView = null;
 				_secondCardView = null;
+				_scoresManager.ResetCombo();
 				return;
 			}
+			_audioManager.PlayMatchSound();
 
 			_firstCardView.gameObject.SetActive(false);
 			_secondCardView.gameObject.SetActive(false);
@@ -155,10 +164,10 @@ namespace Controller
 				return;
 			}
 
-			if (_currentLevelId + 1 != _levelsConfigs.Count)
+			_currentLevelId++;
+			SaveLevelId();
+			if (_currentLevelId != _levelsConfigs.Count)
 			{
-				_currentLevelId++;
-				SaveLevelId();
 				_gameView.ShowNextButton();
 			}
 			else

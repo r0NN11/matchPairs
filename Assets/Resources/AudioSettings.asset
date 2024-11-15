@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40d33b26a23d68f42a2033e91d37d786, type: 3}
   m_Name: AudioSettings
   m_EditorClassIdentifier: 
-  _flipSound: {fileID: 0}
-  _matchSound: {fileID: 0}
-  _misMatchSound: {fileID: 0}
-  _levelEndSound: {fileID: 0}
+  _flipSound: {fileID: 8300000, guid: e1211839b73ada447862a1f0d8b59238, type: 3}
+  _matchSound: {fileID: 8300000, guid: 178d9a6647a4d8d40bb6366e0719fdf3, type: 3}
+  _misMatchSound: {fileID: 8300000, guid: 9d23185b6add4da4d9ad04acba03c237, type: 3}
+  _levelEndSound: {fileID: 8300000, guid: bf87f14d61d61a247a6063c85f59e3b4, type: 3}

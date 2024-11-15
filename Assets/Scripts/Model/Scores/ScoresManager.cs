@@ -32,7 +32,7 @@ namespace Model.Scores
         public void LoadTurn()
         {
             _turnsCount = _saveSystem.LoadValue(TURNS_COUNT_SAVE_KEY, 0);
-            OnScoresChange?.Invoke(_turnsCount);
+            OnTurnsCountChanges?.Invoke(_turnsCount);
         }
 
         public void UpdateTurn(int value)
@@ -68,17 +68,6 @@ namespace Model.Scores
         public void ResetCombo()
         {
             _combo = 0;
-        }
-
-        public void Reset()
-        {
-            ResetCombo();
-            _turnsCount = 0;
-            _combo = 0;
-            _saveSystem.SaveValue(SCORE_SAVE_KEY, _score);
-            _saveSystem.SaveValue(TURNS_COUNT_SAVE_KEY, _turnsCount);
-            OnScoresChange?.Invoke(_score);
-            OnTurnsCountChanges?.Invoke(_turnsCount);
         }
     }
 }
