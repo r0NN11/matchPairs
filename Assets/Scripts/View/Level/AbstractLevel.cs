@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using Save;
-using Unity.VisualScripting;
 using View.Card;
 
 namespace View.Level
@@ -34,13 +32,12 @@ namespace View.Level
 
 		public virtual void LoadState()
 		{
-			_state = _saveSystem.LoadValue($"{LEVEL_STATE_KEY_PREFIX}{_index}", new bool[_cards.Length]);
+			_state = _saveSystem.LoadValue($"{LEVEL_STATE_KEY_PREFIX}{_index}", new bool[_cards.Length/2]);
 			
 			foreach (AbstractCardView card in _cards)
 			{
 				bool active = _state[card.Id];
 				card.gameObject.SetActive(!active);
-				card.Flip(false);
 			}
 		}
 		

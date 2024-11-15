@@ -5,7 +5,9 @@ namespace Controller
 	public interface IGameController 
 	{
 		void LoadGame();
-		public void CheckClick(AbstractCardView cardView);
+		void ResetGame();
 		void EndGame();
+		public void CheckClick(AbstractCardView cardView);
+
 	}
 }

@@ -1,4 +1,7 @@
+using System;
 using Controller;
+using Model.Scores;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -7,35 +10,68 @@ namespace View
 {
 	public class GameView : MonoBehaviour
 	{
+		public event Action OnNextButtonClick;
+		public event Action OnExitButtonClick;
+		public event Action OnResetButtonClick;
 		[SerializeField] private Button _next;
 		[SerializeField] private Button _closeButton;
-		
+		[SerializeField] private Button _resetButton;
+		[SerializeField] private TMP_Text _score;
+		[SerializeField] private TMP_Text _turnsCount;
+
+		[Inject]
+		public void Constructor(IScoresManager scoresManager)
+		{
+			scoresManager.OnScoresChange += UpdateScoreText;
+			scoresManager.OnTurnsCountChanges += UpdateTurnsCountText;
+		}
 		private void Awake()
 		{
-			_next.onClick.AddListener(HideNextButton);
-			_closeButton.onClick.AddListener(GoToMainMenu);
+			_next.onClick.AddListener(OnNextButton);
+			_closeButton.onClick.AddListener(OnExitButton);
+			_resetButton.onClick.AddListener(OnResetButton);
 		}
 
-		private void ShowNextButton()
+		public void ShowNextButton()
 		{
-			gameObject.SetActive(true);
+			_next.gameObject.SetActive(true);
+		}
+		public void ShowResetButton()
+		{
+			_resetButton.gameObject.SetActive(true);
 		}
 
-		private void HideNextButton()
+		private void OnNextButton()
 		{
-			gameObject.SetActive(false);
-
+			OnNextButtonClick?.Invoke();
+			_next.gameObject.SetActive(false);
 		}
 
-		private void GoToMainMenu()
+		private void OnExitButton()
 		{
+			OnExitButtonClick?.Invoke();
+		}
 
+		private void OnResetButton()
+		{
+			_resetButton.gameObject.SetActive(false);
+			OnResetButtonClick?.Invoke();
 		}
 
 		private void OnDestroy()
 		{
-			_next.onClick.RemoveListener(HideNextButton);
-			_closeButton.onClick.RemoveListener(GoToMainMenu);
+			_next.onClick.RemoveListener(OnNextButton);
+			_closeButton.onClick.RemoveListener(OnExitButton);
+			_resetButton.onClick.RemoveListener(OnResetButton);
+		}
+		private void UpdateScoreText(int score)
+		{
+			_score.text = "Score" + score;
+		}
+
+		private void UpdateTurnsCountText(int turnsCount)
+		{
+			_turnsCount.text = "Turns" + turnsCount;
 		}
 	}
 }

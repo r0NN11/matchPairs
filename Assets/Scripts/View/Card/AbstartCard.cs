@@ -14,6 +14,7 @@ namespace View.Card
 		private Image _image;
 		private CardModel _cardModel;
 		public int Id => _cardModel.GetId;
+		private Tween _delayedCall;
 
 		public void Setup(CardModel cardModel, Sprite sprite)
 		{
@@ -27,12 +28,16 @@ namespace View.Card
 			OnClick?.Invoke(this);
 		}
 
-		public virtual void Flip(bool up, float flipTime, Action onComplete = null)
+		public virtual void Flip(bool up, bool back, float flipTime, Action onComplete = null)
 		{
 			Flip(up);
-			DOVirtual.DelayedCall(flipTime, (() =>
+			_delayedCall = DOVirtual.DelayedCall(flipTime, (() =>
 			{
-				Flip(!up);
+				if (back)
+				{
+					Flip(!up);
+				}
+
 				onComplete?.Invoke();
 			}));
 		}
@@ -40,6 +45,11 @@ namespace View.Card
 		public virtual void Flip(bool up)
 		{
 			_image.sprite = up ? _sides[1] : _sides[0];
+		}
+
+		private void OnDestroy()
+		{
+			_delayedCall.Kill();
 		}
 	}
 }

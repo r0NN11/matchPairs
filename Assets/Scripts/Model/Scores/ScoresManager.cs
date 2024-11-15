@@ -62,7 +62,7 @@ namespace Model.Scores
             _score += _gameSettings.GetMatchPoints *
                       (_gameSettings.GetComboMultiplier + _combo / _gameSettings.GetComboIncreaseStep);
             _saveSystem.SaveValue(SCORE_SAVE_KEY, _score);
-            OnTurnsCountChanges?.Invoke(_score);
+            OnScoresChange?.Invoke(_score);
         }
 
         public void ResetCombo()

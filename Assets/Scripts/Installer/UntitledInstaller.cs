@@ -4,6 +4,7 @@ using Model;
 using Model.Scores;
 using Save;
 using UnityEngine;
+using View;
 using View.Card;
 using Zenject;
 using AudioSettings = Model.AudioSettings;
@@ -22,6 +23,7 @@ namespace Installer
 			Container.Bind<IGameController>().To<GameController>().AsSingle();
 			Container.Bind<IScoresManager>().To<ScoresManager>().AsSingle();
 			Container.Bind<IAudioManager>().To<AudioManager>().AsSingle();
+			Container.Bind<GameView>().FromInstance(FindObjectOfType<GameView>(true)).AsSingle();
 
 		}
 		private void CreateCardsFactory()
@@ -35,8 +37,9 @@ namespace Installer
 			base.Start();
 			Container.Resolve<ISaveSystem>();
 			Container.Resolve<IGameController>();
-			Container.Resolve<IScoresManager>();
 			Container.Resolve<IAudioManager>();
+			IScoresManager scoresManager = Container.Resolve<IScoresManager>();
+			scoresManager.Load();
 		}
 	}
 }

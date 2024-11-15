@@ -5,6 +5,7 @@ using Model;
 using Model.Scores;
 using Save;
 using UnityEngine.SceneManagement;
+using View;
 using View.Card;
 using View.Level;
 using Zenject;
@@ -13,30 +14,32 @@ namespace Controller
 {
 	public class GameController : IGameController
 	{
-		public event Action OnLevelEnd;
 		private readonly GameSettings _gameSettings;
 		private readonly IScoresManager _scoresManager;
 		private readonly CardViewSpawner _cardViewSpawner;
 		private readonly IAudioManager _audioManager;
 		private readonly ISaveSystem _saveSystem;
+		private readonly GameView _gameView;
 		private List<LevelConfig> _levelsConfigs;
 		private int _currentLevelId;
-		private AbstractCardView _currentCardView;
+		private AbstractLevel _currentLevel;
+		private AbstractCardView _firstCardView;
+		private AbstractCardView _secondCardView;
 		private const string CURRENT_LEVEL_SAVE_KEY = "current_level";
 
 		[Inject]
-		public GameController(GameSettings gameSettings, IScoresManager scoresManager, CardViewSpawner cardViewSpawner, IAudioManager audioManager,
-			ISaveSystem saveSystem)
+		public GameController(GameSettings gameSettings, IScoresManager scoresManager, CardViewSpawner cardViewSpawner,
+			IAudioManager audioManager, ISaveSystem saveSystem, GameView gameView)
 		{
 			_gameSettings = gameSettings;
 			_levelsConfigs = _gameSettings.GetLevelsConfigs;
 			_scoresManager = scoresManager;
-			_scoresManager.Load();
 			_cardViewSpawner = cardViewSpawner;
 			_audioManager = audioManager;
 			_saveSystem = saveSystem;
+			_gameView = gameView;
+			SubscribeGameViewButtons();
 			Initialize();
-			LoadGame();
 		}
 
 		private void Initialize()
@@ -46,78 +49,128 @@ namespace Controller
 			{
 				card.OnClick += CheckClick;
 			}
+
 			_currentLevelId = _saveSystem.LoadValue(CURRENT_LEVEL_SAVE_KEY, 0);
 			if (_currentLevelId == 0)
 			{
-				_saveSystem.SaveValue(CURRENT_LEVEL_SAVE_KEY, _currentLevelId);
+				SaveLevelId();
 			}
-			
 
+			if (_currentLevelId == _levelsConfigs.Count)
+			{
+				_gameView.ShowResetButton();
+				return;
+			}
+
+			LoadGame();
 		}
 
 		public void LoadGame()
 		{
 			AbstractCardView[] levelCards = _cardViewSpawner.GetCardsForLevelConfig(_levelsConfigs[_currentLevelId]);
-			AbstractLevel level = new StandardLevel(_currentLevelId,_saveSystem,levelCards);
-			level.LoadState();
+			_currentLevel = new StandardLevel(_currentLevelId, _saveSystem, levelCards);
+			_currentLevel.LoadState();
+			foreach (AbstractCardView card in levelCards)
+			{
+				card.Flip(true, true, _gameSettings.GetCardsFlipTime);
+			}
 		}
-		
+
+		private void SubscribeGameViewButtons()
+		{
+			_gameView.OnNextButtonClick += LoadGame;
+			_gameView.OnExitButtonClick += GoToMainMenu;
+			_gameView.OnResetButtonClick += ResetGame;
+		}
+
+
 		public void CheckClick(AbstractCardView cardView)
 		{
-			if (_currentCardView == null)
+			if (_firstCardView == null)
 			{
-				_currentCardView = cardView;
+				_firstCardView = cardView;
+				cardView.Flip(true);
 				return;
 			}
 
-			if (_currentCardView == cardView)
+			if (_secondCardView != null || _firstCardView == cardView || _secondCardView == cardView)
 			{
-				_currentCardView = null;
 				return;
 			}
 
-			cardView.Flip(true);
-			_scoresManager.UpdateTurn(1);
-			CheckForMatch(cardView);
+			_secondCardView = cardView;
+			_secondCardView.Flip(true, false, _gameSettings.GetCardsFlipTime, (() =>
+			{
+				_scoresManager.UpdateTurn(1);
+				CheckForMatch();
+			}));
 		}
-		
+
 		public void EndGame()
 		{
 			GoToMainMenu();
 		}
-		public void GoToMainMenu()
+
+		public void ResetGame()
+		{
+			_currentLevelId = 0;
+			_saveSystem.DeleteSave();
+			_scoresManager.Load();
+			LoadGame();
+		}
+
+		private void GoToMainMenu()
 		{
 			SceneManager.LoadScene(0);
 		}
 
-		private void CheckForMatch(AbstractCardView cardView)
+		private void SaveLevelId()
 		{
-			if (_currentCardView.Id != cardView.Id)
+			_saveSystem.SaveValue(CURRENT_LEVEL_SAVE_KEY, _currentLevelId);
+		}
+
+		private void CheckForMatch()
+		{
+			if (_firstCardView.Id != _secondCardView.Id)
 			{
-				FlipCards(cardView, false);
+				FlipCards(false);
+				_firstCardView = null;
+				_secondCardView = null;
 				return;
 			}
 
-			_currentCardView.gameObject.SetActive(false);
-			cardView.gameObject.SetActive(false);
-			_currentCardView = null;
+			_firstCardView.gameObject.SetActive(false);
+			_secondCardView.gameObject.SetActive(false);
+			_currentLevel.SaveState(_firstCardView.Id);
+			_firstCardView = null;
+			_secondCardView = null;
 			_scoresManager.IncreaseScore();
 			CheckLevelWin();
 		}
 
 		private void CheckLevelWin()
 		{
-			if (_levelsConfigs[_currentLevelId + 1] != null)
+			if (!_currentLevel.CheckWin())
 			{
-				OnLevelEnd?.Invoke();
+				return;
+			}
+
+			if (_currentLevelId + 1 != _levelsConfigs.Count)
+			{
+				_currentLevelId++;
+				SaveLevelId();
+				_gameView.ShowNextButton();
+			}
+			else
+			{
+				_gameView.ShowResetButton();
 			}
 		}
 
-		private void FlipCards(AbstractCardView cardView, bool up)
+		private void FlipCards(bool up)
 		{
-			_currentCardView.Flip(up, _gameSettings.GetCardsFlipTime);
-			cardView.Flip(up, _gameSettings.GetCardsFlipTime);
+			_firstCardView.Flip(up);
+			_secondCardView.Flip(up);
 		}
-
 	}
 }

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using UnityEngine;
 using Zenject;
 
@@ -8,11 +9,11 @@ namespace Save
         [Inject]
         public SaveSystem()
         {
-            
         }
+
         public void SaveValue<T>(string key, T value)
         {
-            string json = JsonUtility.ToJson(value);
+            string json = JsonConvert.SerializeObject(value);
             PlayerPrefs.SetString(key, json);
             PlayerPrefs.Save();
         }
@@ -24,7 +25,21 @@ namespace Save
             {
                 return defaultValue;
             }
-            return JsonUtility.FromJson<T>(json);
+
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(json);
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+
+        public void DeleteSave()
+        {
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
         }
     }
 }
