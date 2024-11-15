@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Model;
 using Model.Level;
 using Sirenix.OdinInspector;
@@ -6,6 +7,7 @@ using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
 using View.Card;
+using Random = UnityEngine.Random;
 
 namespace Editor
 {
@@ -17,14 +19,12 @@ namespace Editor
 		[SerializeField] private bool _randomGeneration;
 		[SerializeField] private Sprite[] _sprites;
 		[Title("Generation")] private const string GAME_SETTINGS_PATH = "Assets/Resources/GameSettings.asset";
-		private static GameSettings _gameSettings;
 		private Sprite _defaultSprite;
 
 		[MenuItem("Game/LevelGenerator")]
 		private static void OpenWindow()
 		{
 			GetWindow<LevelGenerator>().Show();
-			_gameSettings = Resources.Load<GameSettings>("GameSettings");
 		}
 
 		[ShowInInspector] [TableMatrix(SquareCells = true)]
@@ -66,22 +66,35 @@ namespace Editor
 		[Button(ButtonSizes.Medium), GUIColor(0.5f, 0.5f, 0.8f)]
 		public void GenerateLevelConfig()
 		{
+			if (_gridSize.x * _gridSize.y % 2 != 0 && !IsGridDataCorrect())
+			{
+				Debug.Log("Cards count should be even");
+				return;
+			}
+
 			(CardModel[] cardModels, Sprite[] cardSprites, int emptySlotsCount) generatedSlots =
 				GenerateSlots();
 			LevelConfig levelConfig = new LevelConfig(_gridSize, generatedSlots.cardModels,
 				generatedSlots.cardSprites, generatedSlots.emptySlotsCount);
-			if (_gameSettings == null)
+			GameSettings gameSettings = Resources.Load<GameSettings>("GameSettings");
+			if (gameSettings == null)
 			{
-				_gameSettings = CreateInstance<GameSettings>();
-				AssetDatabase.CreateAsset(_gameSettings, GAME_SETTINGS_PATH);
+				gameSettings = CreateInstance<GameSettings>();
+				AssetDatabase.CreateAsset(gameSettings, GAME_SETTINGS_PATH);
 				AssetDatabase.SaveAssets();
 				AssetDatabase.Refresh();
 			}
 
-			_gameSettings.AddLevelConfig(levelConfig);
-			EditorUtility.SetDirty(_gameSettings);
+			gameSettings.AddLevelConfig(levelConfig);
+			EditorUtility.SetDirty(gameSettings);
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
+		}
+
+		private bool IsGridDataCorrect()
+		{
+			int emptySlotsCount = GridData.Cast<Sprite>().Count(sprite => sprite == null);
+			return (GridData.Length - emptySlotsCount) % 2 == 0;
 		}
 
 		private (CardModel[] cardModels, Sprite[] sprites, int emptySlots) GenerateSlots()
