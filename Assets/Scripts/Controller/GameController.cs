@@ -74,6 +74,7 @@ namespace Controller
 				card.Flip(true, true, _gameSettings.GetCardsStartFlipTime);
 			}
 		}
+
 		public void EndGame()
 		{
 			GoToMainMenu();
@@ -84,9 +85,10 @@ namespace Controller
 			_currentLevelId = 0;
 			_saveSystem.DeleteSave();
 			_scoresManager.Load();
-			_scoresManager.ResetCombo();
+			_scoresManager.UpdateCombo(0);
 			LoadLevel();
 		}
+
 		public void CheckClick(AbstractCardView cardView)
 		{
 			if (_firstCardView == null)
@@ -120,11 +122,11 @@ namespace Controller
 
 		private void LoadNextLevel()
 		{
-			_scoresManager.ResetCombo();
+			_scoresManager.UpdateCombo(0);
 			_scoresManager.UpdateTurn(0);
 			LoadLevel();
 		}
-		
+
 		private void GoToMainMenu()
 		{
 			SceneManager.LoadScene(0);
@@ -143,9 +145,10 @@ namespace Controller
 				FlipCards(false);
 				_firstCardView = null;
 				_secondCardView = null;
-				_scoresManager.ResetCombo();
+				_scoresManager.UpdateCombo(0);
 				return;
 			}
+
 			_audioManager.PlayMatchSound();
 
 			_firstCardView.gameObject.SetActive(false);
@@ -164,6 +167,7 @@ namespace Controller
 				return;
 			}
 
+			_audioManager.PlayLevelEndSound();
 			_currentLevelId++;
 			SaveLevelId();
 			if (_currentLevelId != _levelsConfigs.Count)

@@ -9,6 +9,8 @@ namespace Controller
 {
 	public class CardViewHolder : MonoBehaviour
 	{
+		[SerializeField] private RectTransform _cardsContainer;
+		[SerializeField] private float _cardsPadding = 5f;
 		private readonly List<CardViewInject> _cardViewInjects = new List<CardViewInject>();
 		private Vector2 _cardSize;
 		private GameSettings _gameSettings;
@@ -43,10 +45,11 @@ namespace Controller
 			int emptySlotsCount = levelConfig.GetEmptySlotsCount;
 			int cardsCount = gridSize.x * gridSize.y - emptySlotsCount;
 			AbstractCardView[] cardViews = new AbstractCardView[cardsCount];
-			Vector2 start = GetStartPosition(gridSize);
-			float step = _cardSize.x;
+
 			int index = 0;
 			int cardViewIndex = 0;
+			float cardSize = Mathf.Min(_cardSize.x, _cardSize.y);
+			Vector2 start = GetStartPosition(gridSize, cardSize);
 			for (int row = 0; row < gridSize.x; row++)
 			{
 				for (int col = 0; col < gridSize.y; col++)
@@ -66,8 +69,9 @@ namespace Controller
 					cardView.Setup(cardModels[index], sprites[index]);
 					cardView.gameObject.SetActive(true);
 					Transform cardViewTransform = cardView.transform;
-					cardViewTransform.localPosition = (Vector3) start + new Vector3(row, -col, 0) * step;
-					cardViewTransform.localScale = Vector3.one;
+					cardViewTransform.localPosition =
+						(Vector3) start + new Vector3(row, -col, 0) * (cardSize + _cardsPadding);
+					cardViewTransform.localScale = new Vector2(cardSize / _cardSize.x, cardSize / _cardSize.y);
 					cardViewIndex++;
 					index++;
 				}
@@ -80,20 +84,14 @@ namespace Controller
 
 			return cardViews;
 		}
-
-		private Vector2 GetStartPosition(Vector2Int gridSize)
+		
+		private Vector2 GetStartPosition(Vector2Int gridSize,float cardSize)
 		{
-			Vector2 size = GetLevelSize(gridSize);
-			float xPos = -(size.x - _cardSize.x) / 2;
-			float yPos = (size.y - _cardSize.y) / 2;
+			float gridWidth = gridSize.x * cardSize + (gridSize.x - 1) * _cardsPadding;
+			float gridHeight = gridSize.y * cardSize + (gridSize.y - 1) * _cardsPadding;
+			float xPos = -(gridWidth - cardSize) / 2;
+			float yPos = (gridHeight - cardSize) / 2;
 			return new Vector2(xPos, yPos);
-		}
-
-		private Vector2 GetLevelSize(Vector2Int gridSize)
-		{
-			float levelWidth = _cardSize.x * gridSize.x;
-			float levelHeight = _cardSize.y * gridSize.y;
-			return new Vector2(levelWidth, levelHeight);
 		}
 	}
 }

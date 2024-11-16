@@ -14,21 +14,22 @@ namespace View
 		public event Action OnNextButtonClick;
 		public event Action OnExitButtonClick;
 		public event Action OnResetButtonClick;
+		[SerializeField] private Canvas _canvas;
 		[SerializeField] private Button _nextButton;
 		[SerializeField] private Button _closeButton;
 		[SerializeField] private Button _resetButton;
 		[SerializeField] private TMP_Text _score;
+		[SerializeField] private TMP_Text _comboCount;
 		[SerializeField] private TMP_Text _turnsCount;
-		private IScoresManager _scoresManager;
 		private float _animationTime;
 		private Tween _moveTween;
 
 		[Inject]
 		public void Constructor(GameSettings gameSettings, IScoresManager scoresManager)
 		{
-			_scoresManager = scoresManager;
-			_scoresManager.OnScoresChange += UpdateScoreText;
-			_scoresManager.OnTurnsCountChanges += UpdateTurnsCountText;
+			scoresManager.OnScoresChange += UpdateScoreText;
+			scoresManager.OnTurnsCountChanges += UpdateTurnsCountText;
+			scoresManager.OnComboCountChange += UpdateComboCountText;
 			_animationTime = gameSettings.GetButtonsAnimationTime;
 		}
 
@@ -52,7 +53,8 @@ namespace View
 		private void MakeButtonAnimation(Transform buttonTransform)
 		{
 			buttonTransform.gameObject.SetActive(true);
-			buttonTransform.localPosition = new Vector2(buttonTransform.localPosition.x, Screen.width);
+			float canvasRectHeight = ((RectTransform) _canvas.transform).rect.height;
+			buttonTransform.localPosition = new Vector2(buttonTransform.localPosition.x, canvasRectHeight);
 			_moveTween = buttonTransform.DOLocalMoveY(0, _animationTime);
 		}
 
@@ -76,8 +78,6 @@ namespace View
 		private void OnDestroy()
 		{
 			_moveTween.Kill();
-			_scoresManager.OnScoresChange -= UpdateScoreText;
-			_scoresManager.OnTurnsCountChanges -= UpdateTurnsCountText;
 			OnNextButtonClick = null;
 			OnExitButtonClick = null;
 			OnResetButtonClick = null;
@@ -88,12 +88,17 @@ namespace View
 
 		private void UpdateScoreText(int score)
 		{
-			_score.text = "Score" + score;
+			_score.text = "Score " + score;
 		}
 
 		private void UpdateTurnsCountText(int turnsCount)
 		{
-			_turnsCount.text = "Turns" + turnsCount;
+			_turnsCount.text = "Turns " + turnsCount;
+		}
+
+		private void UpdateComboCountText(int comboCount)
+		{
+			_comboCount.text = "Combo " + comboCount;
 		}
 	}
 }

@@ -8,11 +8,13 @@ namespace Model.Scores
     {
         public event Action<int> OnScoresChange;
         public event Action<int> OnTurnsCountChanges;
+        public event Action<int> OnComboCountChange;
         private int _score;
         private int _turnsCount;
-        private int _combo;
+        private int _comboCount;
         private const string SCORE_SAVE_KEY = "score";
         private const string TURNS_COUNT_SAVE_KEY = "turns_count";
+        private const string COMBO_COUNT_SAVE_KEY = "combo_count";
         private readonly ISaveSystem _saveSystem;
         private readonly GameSettings _gameSettings;
 
@@ -27,6 +29,7 @@ namespace Model.Scores
         {
             LoadTurn();
             LoadScore();
+            LoadCombo();
         }
 
         public void LoadTurn()
@@ -58,16 +61,32 @@ namespace Model.Scores
 
         public void IncreaseScore()
         {
-            _combo++;
+            UpdateCombo(1);
             _score += _gameSettings.GetMatchPoints *
-                      (_gameSettings.GetComboMultiplier + _combo / _gameSettings.GetComboIncreaseStep);
+                      (_gameSettings.GetComboMultiplier + _comboCount / _gameSettings.GetComboIncreaseStep);
             _saveSystem.SaveValue(SCORE_SAVE_KEY, _score);
             OnScoresChange?.Invoke(_score);
         }
 
-        public void ResetCombo()
+        public void LoadCombo()
         {
-            _combo = 0;
+            _comboCount = _saveSystem.LoadValue(COMBO_COUNT_SAVE_KEY, 0);
+            OnComboCountChange?.Invoke(_comboCount);
+        }
+
+        public void UpdateCombo(int value)
+        {
+            if (value == 0)
+            {
+                _comboCount = 0;
+            }
+            else
+            {
+                _comboCount += value;
+            }
+
+            _saveSystem.SaveValue(COMBO_COUNT_SAVE_KEY, _comboCount);
+            OnComboCountChange?.Invoke(_comboCount);
         }
     }
 }

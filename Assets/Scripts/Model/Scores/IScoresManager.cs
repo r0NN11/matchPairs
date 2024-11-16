@@ -6,11 +6,13 @@ namespace Model.Scores
 	{
 		event Action<int> OnScoresChange;
 		event Action<int> OnTurnsCountChanges;
+		public event Action<int> OnComboCountChange;
 		void Load();
 		void LoadTurn();
 		void UpdateTurn(int value);
 		void LoadScore();
 		void IncreaseScore();
-		public void ResetCombo();
+		void LoadCombo();
+		void UpdateCombo(int value);
 	}
 }
